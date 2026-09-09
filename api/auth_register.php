@@ -1,6 +1,5 @@
 <?php
-// api/auth_register.php  (POST)
-// Creates a new staff account, pending admin approval.
+
 require_once __DIR__ . '/../config/helpers.php';
 require_once __DIR__ . '/../config/db.php';
 
