@@ -1,5 +1,5 @@
 <?php
-// api/users_approve.php  (POST, admin only)  body: { "username": "..." }
+
 require_once __DIR__ . '/../config/helpers.php';
 requireAdmin();
 require_once __DIR__ . '/../config/db.php';
