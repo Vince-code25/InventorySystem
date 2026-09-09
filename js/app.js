@@ -1,7 +1,4 @@
 
-/* =========================================================
-   ICONS
-========================================================= */
 const ICONS = {
   dashboard: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>`,
   box: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>`,
@@ -20,9 +17,7 @@ const ICONS = {
   users: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>`
 };
 
-/* =========================================================
-   API CLIENT  (talks to the PHP + MySQL backend in /api)
-========================================================= */
+
 async function api(method, url, body){
   const opts = {
     method,
@@ -39,14 +34,12 @@ async function api(method, url, body){
   }
 
   let data = {};
-  try{ data = await res.json(); }catch(e){ /* empty body, e.g. some 204s */ }
+  try{ data = await res.json(); }catch(e){ 
   return { ok: res.ok, status: res.status, data };
 }
 
 
-/* =========================================================
-   APP STATE
-========================================================= */
+
 const LOW_STOCK_THRESHOLD = 10;
 const PAGE_SIZE = 8;
 const SORTABLE_COLUMNS = [
@@ -61,19 +54,19 @@ const SORTABLE_COLUMNS = [
 
 const state = {
   booted: false,
-  user: null,          // {username, email}
+  user: null,          
   page: 'dashboard',
   products: [],
   categories: [],
   search: '',
-  editingId: null,      // product id being edited, or null for "add" mode
+  editingId: null,      
   sidebarOpen: false,
   loginError: '',
-  authMode: 'login',    // 'login' or 'register'
-  authNotice: '',       // one-time success message shown after registering
-  inventoryFilter: 'all', // 'all' or 'attention' (low + out of stock, set via Dashboard card)
-  sortColumn: null,       // one of SORTABLE_COLUMNS keys, or null for insertion order
-  sortDirection: 'asc',   // 'asc' or 'desc'
+  authMode: 'login',    
+  authNotice: '',       
+  inventoryFilter: 'all', 
+  sortColumn: null,       
+  sortDirection: 'asc',   
   currentPage: 1
 };
 
@@ -82,8 +75,7 @@ function uid(prefix){
 }
 
 async function boot(){
-  // The server seeds the database on its first-ever run, so the client
-  // no longer needs to seed anything itself — it just loads what's there.
+  
   const sessionRes = await api('GET', 'api/auth_session.php');
   if(sessionRes.ok && sessionRes.data.user){
     state.user = sessionRes.data.user;
@@ -102,9 +94,7 @@ async function loadProductsAndCategories(){
   if(categoriesRes.ok) state.categories = categoriesRes.data.categories.map(c => c.name);
 }
 
-/* =========================================================
-   TOAST
-========================================================= */
+
 function toast(message, type){
   const region = document.getElementById('toast-region');
   const el = document.createElement('div');
@@ -120,9 +110,7 @@ function escapeHtml(str){
   return d.innerHTML;
 }
 
-/* =========================================================
-   MODAL (confirm delete)
-========================================================= */
+
 function showConfirmModal({ title, message, confirmLabel, onConfirm }){
   const region = document.getElementById('modal-region');
   region.innerHTML = `
@@ -142,9 +130,7 @@ function showConfirmModal({ title, message, confirmLabel, onConfirm }){
 }
 function closeModal(){ document.getElementById('modal-region').innerHTML = ''; }
 
-/* =========================================================
-   DERIVED HELPERS
-========================================================= */
+
 function statusOf(qty){
   if(qty <= 0) return 'Out of Stock';
   if(qty < LOW_STOCK_THRESHOLD) return 'Low Stock';
@@ -188,9 +174,7 @@ function applySort(list){
   });
 }
 
-/* =========================================================
-   NAVIGATION
-========================================================= */
+
 const NAV_ITEMS = [
   { key:'dashboard', label:'Dashboard', icon:'dashboard' },
   { key:'inventory', label:'Inventory', icon:'box' },
@@ -212,8 +196,7 @@ function navigate(page, options){
   state.page = page;
   state.sidebarOpen = false;
   if(page !== 'add-product') state.editingId = null;
-  // Any normal navigation to Inventory shows all products, unless explicitly
-  // told to keep the "needs attention" filter (see goToLowStock()).
+
   if(page === 'inventory'){
     state.currentPage = 1;
     if(!options.keepFilter){
@@ -242,9 +225,7 @@ async function logout(){
   render();
 }
 
-/* =========================================================
-   RENDER: ROOT
-========================================================= */
+
 function render(){
   const root = document.getElementById('root');
   if(!state.booted){
@@ -261,9 +242,7 @@ function render(){
   renderPageInto();
 }
 
-/* =========================================================
-   LOGIN PAGE
-========================================================= */
+
 function renderLogin(){
   if(state.authMode === 'register') return renderRegister();
 
@@ -413,9 +392,7 @@ function attachRegisterHandlers(){
     const setErr = (el, errId, msg) => { el.classList.add('err'); document.getElementById(errId).textContent = msg; hasError = true; };
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // Client-side checks first (fast feedback, no round trip needed for
-    // obvious mistakes). Username/email uniqueness can only be confirmed
-    // by the server, since that's where the real record of accounts lives.
+    
     if(!username) setErr(usernameEl, 'err-reg-username', 'Username is required.');
     if(!email) setErr(emailEl, 'err-reg-email', 'Email is required.');
     else if(!emailPattern.test(email)) setErr(emailEl, 'err-reg-email', 'Enter a valid email address.');
@@ -432,9 +409,7 @@ function attachRegisterHandlers(){
     submitBtn.disabled = false;
 
     if(!result.ok){
-      // Server-side validation is authoritative — surface whatever it found
-      // (e.g. a username/email that became taken a moment ago) in the same
-      // error slots the client-side pass uses.
+     
       const fieldMap = { username:'err-reg-username', email:'err-reg-email', password:'err-reg-password', confirmPassword:'err-reg-confirm' };
       const errs = (result.data && result.data.errors) || {};
       Object.keys(errs).forEach(field => {
@@ -455,9 +430,7 @@ function attachRegisterHandlers(){
   });
 }
 
-/* =========================================================
-   APP SHELL (sidebar + topbar)
-========================================================= */
+
 function renderShell(){
   const initials = state.user.username.slice(0,2).toUpperCase();
   return `
@@ -520,9 +493,7 @@ function attachShellHandlers(){
   });
 }
 
-/* =========================================================
-   PAGE ROUTER
-========================================================= */
+
 function renderPageInto(){
   const el = document.getElementById('page-content');
   if(state.page === 'dashboard'){ el.innerHTML = renderDashboard(); attachDashboardHandlers(); }
@@ -537,12 +508,10 @@ function renderPageInto(){
   }
 }
 
-/* =========================================================
-   MANAGE USERS (admin only)
-========================================================= */
+
 async function loadAndRenderUsers(){
   const result = await api('GET', 'api/users_list.php');
-  if(state.page !== 'manage-users') return; // user navigated away before this resolved
+  if(state.page !== 'manage-users') return; 
   const users = result.ok ? result.data.users : [];
   const el = document.getElementById('page-content');
   el.innerHTML = renderManageUsers(users);
@@ -644,9 +613,7 @@ function attachManageUsersHandlers(){
   });
 }
 
-/* =========================================================
-   DASHBOARD
-========================================================= */
+
 function renderDashboard(){
   const totalProducts = state.products.length;
   const totalStock = state.products.reduce((sum, p) => sum + Number(p.quantity), 0);
@@ -704,9 +671,7 @@ function emptyState(title, sub){
   return `<div class="empty-state">${ICONS.inboxEmpty}<h3>${escapeHtml(title)}</h3><p>${escapeHtml(sub)}</p></div>`;
 }
 
-/* =========================================================
-   INVENTORY
-========================================================= */
+
 function renderInventory(){
   let list = filteredProducts();
   list = applySort(list);
@@ -876,9 +841,7 @@ function attachInventoryHandlers(){
   });
 }
 
-/* =========================================================
-   ADD / EDIT PRODUCT FORM
-========================================================= */
+
 function renderProductForm(){
   const editing = state.editingId ? state.products.find(p => p.id === state.editingId) : null;
   const isEdit = !!editing;
@@ -1056,9 +1019,7 @@ function attachProductFormHandlers(){
   });
 }
 
-/* =========================================================
-   CATEGORIES
-========================================================= */
+
 function renderCategories(){
   const counts = {};
   state.products.forEach(p => { counts[p.category] = (counts[p.category] || 0) + 1; });
@@ -1132,9 +1093,7 @@ function attachCategoriesHandlers(){
   });
 }
 
-/* =========================================================
-   REPORTS
-========================================================= */
+
 function renderReports(){
   const totalValue = state.products.reduce((sum, p) => sum + (Number(p.quantity) * Number(p.price)), 0);
   const lowStock = state.products.filter(p => statusOf(p.quantity) === 'Low Stock');
@@ -1196,7 +1155,5 @@ function renderReports(){
   `;
 }
 
-/* =========================================================
-   INIT
-========================================================= */
+
 boot();
