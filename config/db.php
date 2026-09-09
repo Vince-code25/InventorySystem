@@ -1,10 +1,5 @@
 <?php
-// config/db.php
-// Database connection settings.
-//
-// These defaults match a standard XAMPP/WAMP/MAMP local setup
-// (MySQL user "root" with no password). If your setup is different,
-// change the values below.
+
 
 $DB_HOST = 'localhost';
 $DB_NAME = 'stockroom_db';
