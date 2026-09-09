@@ -1,7 +1,5 @@
 <?php
-// api/products_update.php  (POST, must be logged in)  body includes "id"
-// The Product ID is locked once created (it's the unique identifier),
-// so it's used here only to find the record — never changed.
+
 require_once __DIR__ . '/../config/helpers.php';
 requireLogin();
 require_once __DIR__ . '/../config/db.php';
