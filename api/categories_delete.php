@@ -1,5 +1,5 @@
 <?php
-// api/categories_delete.php  (POST, must be logged in)  body: { "name": "..." }
+
 require_once __DIR__ . '/../config/helpers.php';
 requireLogin();
 require_once __DIR__ . '/../config/db.php';
