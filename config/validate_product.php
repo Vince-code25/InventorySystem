@@ -1,11 +1,5 @@
 <?php
-// config/validate_product.php
-// Server-side validation for creating/editing a product — the same
-// rules enforced in the browser, re-checked here independently so
-// they can't be bypassed by calling the API directly.
-//
-// $currentId: when editing, the product's existing id (excluded from
-// its own uniqueness check). Pass null when creating a new product.
+
 function validateProduct(PDO $pdo, array $body, ?string $currentId) {
     $errors = [];
 
