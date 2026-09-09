@@ -1,7 +1,5 @@
 <?php
-// api/users_remove.php  (POST, admin only)  body: { "username": "..." }
-// Used both to reject a pending registration and to remove an
-// already-approved account.
+
 require_once __DIR__ . '/../config/helpers.php';
 requireAdmin();
 require_once __DIR__ . '/../config/db.php';
