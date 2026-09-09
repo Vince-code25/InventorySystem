@@ -1,5 +1,5 @@
 <?php
-// api/auth_login.php  (POST)
+
 require_once __DIR__ . '/../config/helpers.php';
 require_once __DIR__ . '/../config/db.php';
 
