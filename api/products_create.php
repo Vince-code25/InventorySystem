@@ -1,5 +1,5 @@
 <?php
-// api/products_create.php  (POST, must be logged in)
+
 require_once __DIR__ . '/../config/helpers.php';
 requireLogin();
 require_once __DIR__ . '/../config/db.php';
