@@ -1,17 +1,3 @@
--- ============================================================
--- Stockroom Inventory Management System — Database Setup
--- ============================================================
--- HOW TO USE THIS FILE (see README.md for full step-by-step):
---   1. Open phpMyAdmin (usually http://localhost/phpmyadmin)
---   2. Click "New" in the left sidebar to create a database
---   3. Name it: stockroom_db  (then click Create)
---   4. Click on the new "stockroom_db" database, then the "Import" tab
---   5. Choose this file (schema.sql) and click "Go"
---
--- That's it — this single file creates every table AND fills them
--- with a working admin account plus sample products, so the app is
--- ready to use immediately.
--- ============================================================
 
 CREATE DATABASE IF NOT EXISTS stockroom_db
   CHARACTER SET utf8mb4
@@ -19,9 +5,6 @@ CREATE DATABASE IF NOT EXISTS stockroom_db
 
 USE stockroom_db;
 
--- ------------------------------------------------------------
--- Table: users
--- ------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS users (
   username      VARCHAR(50) PRIMARY KEY,
   email         VARCHAR(255) NOT NULL UNIQUE,
@@ -30,19 +13,12 @@ CREATE TABLE IF NOT EXISTS users (
   approved      TINYINT(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB;
 
--- ------------------------------------------------------------
--- Table: categories
--- ------------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS categories (
   name VARCHAR(100) PRIMARY KEY
 ) ENGINE=InnoDB;
 
--- ------------------------------------------------------------
--- Table: products
--- (pk is an internal auto-increment column just to preserve the
---  order products were added in — the visible/unique identifier
---  users interact with is the "id" column, e.g. "PRD-0001")
--- ------------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS products (
   pk       INT AUTO_INCREMENT PRIMARY KEY,
   id       VARCHAR(64) NOT NULL UNIQUE,
@@ -58,15 +34,7 @@ CREATE TABLE IF NOT EXISTS products (
     ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
--- ============================================================
--- Seed data — a working admin account + sample products
--- ============================================================
 
--- Default administrator account.
---   Username: admin
---   Password: admin123
--- (The password below is already securely hashed with PHP's
---  password_hash() — it is NOT stored as plain text.)
 INSERT INTO users (username, email, password_hash, role, approved) VALUES
   ('admin', 'admin@stockroom.com', '$2y$10$svW/gHZ/KuBB/c0t3MEks.MuV8fYMAX4Brt.JCQcm3nVummHJOfWm', 'admin', 1);
 
