@@ -1,5 +1,5 @@
 <?php
-// api/users_list.php  (GET, admin only)
+
 require_once __DIR__ . '/../config/helpers.php';
 requireAdmin();
 require_once __DIR__ . '/../config/db.php';
